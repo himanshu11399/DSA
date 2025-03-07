@@ -14,29 +14,30 @@ public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
       int preindex=0;
        int n=preorder.size();
-      TreeNode*ans=solve(preorder,inorder,preindex,0,n-1);
+       map<int,int>nodetoindex;
+       createmap(inorder,nodetoindex);
+      TreeNode*ans=solve(preorder,inorder,preindex,0,n-1,nodetoindex);
       return ans;  
     }
     private:
-    TreeNode*solve(vector<int>preorder,vector<int>inorder,int& index,int start,int end){
+    TreeNode*solve(vector<int>preorder,vector<int>inorder,int& index,int start,int end
+    ,map<int,int>&nodetoindex){
         int n=preorder.size();
         if(index>=n || start>end)   return NULL;
         int current=preorder[index];
         index++;
         TreeNode*root=new TreeNode(current);
-        int pos=find(inorder,current);
+        int pos=nodetoindex[current];
         
-        root->left=solve(preorder,inorder,index,start,pos-1);
-        root->right=solve(preorder,inorder,index,pos+1,end);
+        root->left=solve(preorder,inorder,index,start,pos-1,nodetoindex);
+        root->right=solve(preorder,inorder,index,pos+1,end,nodetoindex);
         return root;
 
     }
-    int find(vector<int>arr,int element){
+    void createmap(vector<int>arr, map<int,int>&nodetoindex){
         for(int i=0;i<arr.size();i++){
-            if(arr[i]==element){
-                return i;
+            nodetoindex[arr[i]]=i;
             }
         }
-        return -1;
-    }
+    
 };
