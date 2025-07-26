@@ -36,6 +36,9 @@ for(int i=0;i<n;i++){
 
         for(int i=0;i<row.size();i++){
             makerow(matrix,c,row[i]);
+        
+        }
+        for(int i=0;i<row.size();i++){
             makecol(matrix,r,col[i]);
         }
 
