@@ -1,17 +1,15 @@
 class Solution {
 public:
     int missingNumber(vector<int>& nums) {
+       int currsum=0;
+       int n=nums.size();
 
-       unordered_set<int>st;
+       int tsum=(n*(n+1))/2;
 
        for(int i=0;i<nums.size();i++){
-         st.insert(nums[i]);
-       } 
+           currsum+=nums[i];
+       }
 
-       for(int i=1;i<=nums.size();i++){
-           if(st.find(i)==st.end()){
-            return {i};
-           }
-       }return 0;
+    return tsum-currsum;
     }
 };
