@@ -9,70 +9,71 @@
  */
 class Solution {
 public:
-unordered_map<TreeNode*,TreeNode*>parent;
-
-void inorder(TreeNode*root){
-    if(!root) return;
-
-    if(root->left){
-        parent[root->left]=root;
-        inorder(root->left);
+    unordered_map<TreeNode*, TreeNode*> parent;
+    // map<root,parentroot>
+    void inorder(TreeNode* root) {
+        if (root == NULL)
+            return;
+        if (root->left) {
+            parent[root->left] = root;
+            inorder(root->left);
+        }
+        if (root->right) {
+            parent[root->right] = root;
+            inorder(root->right);
+        }
     }
-    if(root->right){
-        parent[root->right]=root;
-        inorder(root->right);
-    }
-}
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        vector<int>ans;
 
-        inorder(root);
-        BFS(target,k,ans);
-        return ans;
-    }
-    private:
-
-    void BFS(TreeNode*target,int k,vector<int>&ans){
-        queue<TreeNode*>q;
+    void BFS(TreeNode* target, int k, vector<int>& ans) {
+        queue<TreeNode*> q;
         q.push(target);
 
-        unordered_set<int>visited;
+        unordered_set<int> visited;
         visited.insert(target->val);
 
-        while(!q.empty()){
-           int n=q.size();
-           if(k==0){
-            break;
-           }
+        while (!q.empty()) {
+            int n = q.size();
+            if (k == 0) {
+                break;
+            } else {
+                while (n--) {
+                    TreeNode* curr = q.front();
+                    q.pop();
 
-           while(n--){
-            TreeNode*node=q.front();
-            q.pop();
+                    // left
+                    if (curr->left != NULL && !visited.count(curr->left->val)) {
+                        q.push(curr->left);
+                        visited.insert(curr->left->val);
+                    }
 
-            //for left
-            if(node->left!=NULL && !visited.count(node->left->val) ){
-                q.push(node->left);
-                visited.insert(node->left->val);
+                    // right
+                    if (curr->right != NULL && !visited.count(curr->right->val)) {
+                        q.push(curr->right);
+                        visited.insert(curr->right->val);
+                    }
+
+                    // parent
+                    if (parent.count(curr) && !visited.count(parent[curr]->val)) {
+                        q.push(parent[curr]);
+                        visited.insert(parent[curr]->val);
+                    }
+                }
+                k--;
             }
-
-            //for right
-            if(node->right!=NULL && !visited.count(node->right->val) ){
-                q.push(node->right);
-                visited.insert(node->right->val);
-            }
-
-            if(parent.count(node) && !visited.count(parent[node]->val) ){
-                q.push(parent[node]);
-                visited.insert(parent[node]->val);
-            }
-           }k--;
         }
-    
-        while(!q.empty()){
-            TreeNode*node=q.front();
+        while (!q.empty()) {
+            TreeNode* temp = q.front();
             q.pop();
-            ans.push_back(node->val);
+            ans.push_back(temp->val);
         }
+    }
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        vector<int> ans;
+        if (root == NULL)
+            return ans;
 
-    }   
+        inorder(root);
+        BFS(target, k, ans);
+        return ans;
+    }
 };
