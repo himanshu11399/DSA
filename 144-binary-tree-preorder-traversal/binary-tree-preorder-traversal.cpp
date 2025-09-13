@@ -11,17 +11,33 @@
  * };
  */
 class Solution {
+
 public:
     vector<int> ans;
     vector<int> preorderTraversal(TreeNode* root) {
-
         if (root == NULL) {
             return ans;
         }
-        ans.push_back(root->val);
-        preorderTraversal(root->left);
-        preorderTraversal(root->right);
+        while (root) {
+            if (root->left == NULL) {
+                ans.push_back(root->val);
+                root = root->right;
+            } else {
+                TreeNode* curr = root->left;
+                while (curr->right && curr->right != root) {
+                    curr = curr->right;
+                }
 
+                if (curr->right == root) {
+                    curr->right = NULL;
+                    root = root->right;
+                } else {
+                    ans.push_back(root->val);
+                    curr->right=root;
+                    root = root->left;
+                }
+            }
+        }
         return ans;
     }
 };
