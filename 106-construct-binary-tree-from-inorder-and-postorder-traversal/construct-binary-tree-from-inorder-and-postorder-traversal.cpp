@@ -6,39 +6,36 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
 public:
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-    
-       int n=postorder.size();
-       int preindex=n-1;
-      TreeNode*ans=solve(postorder,inorder,preindex,0,n-1);
-      return ans;  
-    }
-    private:
-    TreeNode*solve(vector<int>postorder,vector<int>inorder,int& index,int start,int end){
-        int n=postorder.size();
-        if(index<0 || start>end)   return NULL;
-        int current=postorder[index];
-        index--;
-        TreeNode*root=new TreeNode(current);
-        int pos=find(inorder,current);
-
-         root->right=solve(postorder,inorder,index,pos+1,end);
-         root->left=solve(postorder,inorder,index,start,pos-1);
-       
-        return root;
-
-    }
-    int find(vector<int>arr,int element){
-        for(int i=0;i<arr.size();i++){
-            if(arr[i]==element){
+    int search(vector<int> arr, int st, int end, int val) {
+        for (int i = st; i <= end; i++) {
+            if (arr[i] == val) {
                 return i;
             }
         }
         return -1;
+    }
+    TreeNode* helper(vector<int>& in, vector<int>& pos, int left, int right,
+                     int& posIdx) {
+        if (left > right)
+            return NULL;
+
+        TreeNode* root = new TreeNode(pos[posIdx]);
+        int inIdx = search(in, left, right, pos[posIdx]);
+        posIdx--;
+
+        root->right = helper(in, pos, inIdx+1, right, posIdx);
+        root->left = helper(in, pos, left, inIdx-1, posIdx);
+
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& in, vector<int>& pos) {
+        int idx = pos.size() - 1;
+        return helper(in, pos, 0, in.size() - 1, idx);
     }
 };
