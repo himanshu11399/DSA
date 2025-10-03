@@ -8,8 +8,7 @@ public:
         }
 
         priority_queue<pair<int, int>, vector<pair<int, int>>,
-                       greater<pair<int, int>>>
-            pq;
+                       greater<pair<int, int>>>pq;
         pq.push({0, src});
         //{dis,src}
         vector<int> dist(n + 1, 1e9);
