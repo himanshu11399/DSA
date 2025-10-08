@@ -6,19 +6,20 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
 public:
-    
-    bool helper(TreeNode*root,TreeNode*min,TreeNode*max){
-        if(root==NULL) return true;
-        if(min && root->val<=min->val) return false;
-        if(max && root->val>=max->val) return false;
-        return helper(root->left,min,root) && helper(root->right,root,max);
+    // st=maxleft,end=maxright
+    bool helper(TreeNode* root, long st, long end) {
+        if (root == NULL)
+            return true;
+        if (root->val <= st || root->val >= end)
+            return false;
+        return helper(root->left, st, root->val) &&
+               helper(root->right, root->val, end);
     }
-    bool isValidBST(TreeNode* root) {
-        return helper(root,NULL,NULL);
-    }
+    bool isValidBST(TreeNode* root) { return helper(root, LONG_MIN, LONG_MAX); }
 };
