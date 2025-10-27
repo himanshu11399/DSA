@@ -7,7 +7,7 @@ public:
         if(lastend<i) return false;
         lastend=max(lastend,nums[i]+i);
         if(lastend>=n-1) return true;
-      }
-      return false;  
+      } 
+      return true; 
     }
 };
