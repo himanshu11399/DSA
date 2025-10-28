@@ -2,13 +2,14 @@ class LRUCache {
 public:
     class node {
     public:
-        int key, val;
-        node* next;
+        int key;
+        int value;
         node* prev;
+        node* next;
 
-        node(int k, int v) {
+        node(int k, int val) {
             key = k;
-            val = v;
+            value = val;
             next = NULL;
             prev = NULL;
         }
@@ -16,27 +17,27 @@ public:
 
     node* head = new node(-1, -1);
     node* tail = new node(-1, -1);
-    int limit;
 
+    int limits;
     unordered_map<int, node*> mpp;
 
-    void addNode(node* newnode) {
-        node* temp = head->next;
-
-        head->next = newnode;
-        temp->prev = newnode;
-
-        newnode->next = temp;
-        newnode->prev = head;
+    void deleteNode(node* temp) {
+        temp->next->prev = temp->prev;
+        temp->prev->next = temp->next;
     }
 
-    void deleteNode(node* oldnode) {
-        oldnode->next->prev = oldnode->prev;
-        oldnode->prev->next = oldnode->next;
+    void insertNode(node* newNode) {
+        node* temp = head->next;
+
+        head->next = newNode;
+        temp->prev = newNode;
+
+        newNode->next = temp;
+        newNode->prev = head;
     }
 
     LRUCache(int capacity) {
-        limit = capacity;
+        limits = capacity;
         head->next = tail;
         tail->prev = head;
     }
@@ -46,30 +47,28 @@ public:
             return -1;
         }
 
-        node* ansnode = mpp[key];
-        int ans = ansnode->val;
+        node* curr = mpp[key];
+        int ans = curr->value;
 
-        deleteNode(ansnode);
-        addNode(ansnode);
+        deleteNode(mpp[key]);
+        insertNode(mpp[key]);
 
         return ans;
     }
 
     void put(int key, int value) {
-
         if (mpp.find(key) != mpp.end()) {
-            node* oldnode = mpp[key];
-            deleteNode(oldnode);
+            deleteNode(mpp[key]);
             mpp.erase(key);
         }
 
-        if (mpp.size() == limit) {
+        if(mpp.size()==limits){
             mpp.erase(tail->prev->key);
             deleteNode(tail->prev);
         }
 
         node* newnode = new node(key, value);
-        addNode(newnode);
+        insertNode(newnode);
         mpp[key] = newnode;
     }
 };
