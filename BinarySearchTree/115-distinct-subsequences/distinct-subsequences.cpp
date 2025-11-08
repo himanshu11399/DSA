@@ -1,28 +1,21 @@
 class Solution {
 public:
-    vector<vector<int>> dp;
-    int solve(int i, int j, string& s, string& t) {
-        if (j == t.size())
-            return 1;
-        if (i == s.size() && j < t.size())
-            return 0;
-
-        if (dp[i][j] != -1)
-            return dp[i][j];
-
-        int ans = 0;
-        if (s[i] == t[j]) {
-            ans += solve(i + 1, j + 1, s, t) + solve(i + 1, j, s, t);
-        } else {
-            ans += solve(i + 1, j, s, t);
-        }
-
-        return dp[i][j] = ans;
-    }
     int numDistinct(string s, string t) {
-        int m = s.size();
-        int n = t.size();
-        dp.assign(m + 1, vector<int>(n + 1, -1));
-        return solve(0, 0, s, t);
+        int n=s.size();
+        int m=t.size();
+        vector<vector<unsigned long long>>dp(n+1,vector<unsigned long long>(m+1,0));
+        for(int i=0;i<=n;i++){
+            dp[i][0]=1;
+        }
+        for(long long i=1;i<=n;i++){
+            for(long long j=1;j<=m;j++){
+                if(s[i-1]==t[j-1]){
+                    dp[i][j]=dp[i-1][j-1]+dp[i-1][j];
+                }else{
+                    dp[i][j]=dp[i-1][j];
+                }
+            }
+        }
+        return (int)dp[n][m];
     }
 };
