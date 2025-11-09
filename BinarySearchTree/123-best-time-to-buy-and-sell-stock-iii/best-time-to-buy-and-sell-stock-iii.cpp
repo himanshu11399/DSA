@@ -1,6 +1,6 @@
 class Solution {
 public:
-    vector<vector<vector<int>>> dp;
+    // vector<vector<vector<int>>> dp;
     // int solve(int i, int buy, vector<int>& prices, int limit) {
     //     if (i >= prices.size() || limit <= 0)
     //         return 0;
@@ -49,8 +49,8 @@ public:
         return next[1][2];
     }
     int maxProfit(vector<int>& prices) {
-        int n = prices.size();
-        dp.assign(n + 1, vector<vector<int>>(2, vector<int>(3, 0)));
+        // int n = prices.size();
+        // dp.assign(n + 1, vector<vector<int>>(2, vector<int>(3, 0)));
         // return solve(0, 1, prices, 2);
         return tabulation(prices);
     }
