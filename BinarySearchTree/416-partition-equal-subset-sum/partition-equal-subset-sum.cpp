@@ -1,38 +1,37 @@
 class Solution {
 public:
+    bool isSubsetSum(vector<int>& arr, int target) {
+        int n = arr.size();
 
-    bool solve(int i,vector<int>&nums,int target,int sum,vector<vector<int>>&dp){
+        vector<vector<bool>> dp(n + 1, vector<bool>(target + 1, false));
 
-        if(target==sum) return true;
-        if(sum>target || i>=nums.size()) return false;
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = true;
+        }
 
-        if(dp[i][sum]!=-1) return dp[i][sum];
-
-        bool inc=solve(i+1,nums,target,sum+nums[i],dp);
-        bool exc=solve(i+1,nums,target,sum,dp);
-
-        return dp[i][sum]=inc||exc;
-    }
-
-    bool find(vector<int>& nums, int target) {
-        int n = nums.size();
-        vector<vector<int>> dp(n + 1, vector<int>(target + 1, -1));
-        return solve(0, nums, target,0, dp);
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= target; j++) {
+                // Exclude
+                dp[i][j] = dp[i - 1][j];
+                
+                if (arr[i - 1] <= j) {
+                    dp[i][j] = dp[i][j] || dp[i - 1][j - arr[i - 1]];
+                }
+            }
+        }
+        return dp[n - 1][target];
     }
 
     bool canPartition(vector<int>& nums) {
-        int sum = 0;
+        int total = 0;
         for (int i = 0; i < nums.size(); i++) {
-            sum += nums[i];
-        }
-         
-        
-        if (sum % 2 != 0) {
-            return false;
+            total += nums[i];
         }
 
-            int target = sum / 2;
-        return find(nums, target);
-    
+        if (total % 2 != 0)
+            return false;
+
+        int find = total / 2;
+        return isSubsetSum(nums, find);
     }
 };
