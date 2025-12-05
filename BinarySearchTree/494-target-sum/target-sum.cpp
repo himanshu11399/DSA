@@ -1,25 +1,32 @@
 class Solution {
 public:
     vector<vector<int>> dp;
-    int solve(int i, vector<int>& nums, int target,int sum) {
-        if(target>sum) return 0;
-        if(i==nums.size()) return (target==0);
-        if (dp[i][target+sum] != -1) {
-            return dp[i][target+sum];
+    int offset;
+
+    int solve(int i, vector<int>& nums, int target) {
+        if(target>offset) return 0;
+        if (i==nums.size()) {
+            return target==0 ? 1 : 0;
         }
 
-        // Assign +
-        int add = solve(i + 1, nums, target - nums[i],sum);
-        // Assign -
-        int sub = solve(i + 1, nums, target + nums[i],sum);
+        if (dp[i][target+offset] != -1)
+            return dp[i][target+offset];
 
-        return dp[i][target+sum] = (add + sub);
+        
+        int add = solve(i + 1, nums, target - nums[i]);
+        int subs = solve(i + 1, nums, target + nums[i]);
+
+        return dp[i][target + offset] = add + subs;
     }
+
     int findTargetSumWays(vector<int>& nums, int target) {
-        int totalsum=accumulate(nums.begin(),nums.end(),0);
-        if(totalsum<abs(target)) return 0;
         int n = nums.size();
-        dp.assign(n, vector<int>(2*totalsum+1, -1));
-        return solve(0, nums,target,totalsum);
+        int sum=accumulate(nums.begin(),nums.end(),0);
+         
+        if(sum<abs(target)) return 0;
+        offset=sum;
+        dp.assign(n + 1, vector<int>(2*sum+1, -1));
+
+        return solve(0, nums, target);
     }
 };
