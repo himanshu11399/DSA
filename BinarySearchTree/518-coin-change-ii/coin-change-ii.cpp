@@ -1,22 +1,24 @@
 class Solution {
 public:
-    int func(int idx, vector<int>& coins, int amount, vector<vector<int>>& dp) {
-        if (amount == 0)
+    vector<vector<int>> dp;
+    int solve(int i, vector<int>& coins, int target) {
+        if (target == 0)
             return 1;
-        if (idx == coins.size())
+        if (i >= coins.size() || target < 0)
             return 0;
-        if (dp[idx][amount] != -1)
-            return dp[idx][amount];
+        if (dp[i][target] != -1)
+            return dp[i][target];
+        // take same
+        int same = solve(i, coins, target - coins[i]);
 
-        int ways = 0;
-        if (coins[idx] <= amount) {
-            ways += func(idx, coins, amount - coins[idx], dp);
-        }
-        ways += func(idx + 1, coins, amount, dp);
-        return dp[idx][amount] = ways;
+        // take different
+        int diff = solve(i + 1, coins, target);
+
+        return dp[i][target] = same + diff;
     }
-    int change(int amount, vector<int>& coins) {
-        vector<vector<int>> dp(coins.size() + 1, vector<int>(amount + 1, -1));
-        return func(0, coins, amount, dp);
-    }
+    int change(int amount, vector<int>& coins) { 
+        int n = coins.size();
+        dp.assign(n,vector<int>(amount+1,-1));
+        return solve(0,coins,amount);
+         }
 };
