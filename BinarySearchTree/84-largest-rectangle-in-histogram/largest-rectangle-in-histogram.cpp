@@ -1,26 +1,45 @@
 class Solution {
 public:
-    int largestRectangleArea(vector<int>& heights) {
+    vector<int> NSL(vector<int>& nums) {
+        int n = nums.size();
         stack<int> st;
-        int maxA = 0;
-        int n = heights.size();
-        for (int i = 0; i <= n; i++) {
-            while (!st.empty() && (i == n || heights[st.top()] > heights[i])) {
-                int height = heights[st.top()];
+        vector<int> ans(n);
+        for (int i = 0; i < n; i++) {
+            while (!st.empty() && nums[st.top()] >= nums[i]) {
                 st.pop();
-
-                int width;
-                if (st.empty()) {
-                    width = i;
-                } else {
-                    width = i - st.top() - 1;
-                }
-                maxA = max(maxA, height * width);
             }
-            if (i < n) {
-                st.push(i);
-            }
+            ans[i] = st.empty() ? -1 : st.top();
+            st.push(i);
         }
-        return maxA;
+        return ans;
+    }
+
+    vector<int> NSR(vector<int>& nums) {
+        int n = nums.size();
+        stack<int> st;
+        vector<int> ans(n);
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.empty() && nums[st.top()] >= nums[i]) {
+                st.pop();
+            }
+            ans[i] = st.empty() ? n : st.top();
+            st.push(i);
+        }
+        return ans;
+    }
+
+    int largestRectangleArea(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> NSLeft = NSL(nums);
+        vector<int> NSRight = NSR(nums);
+        int maxval = INT_MIN;
+        for (int i = 0; i < n; i++) {
+            int height = nums[i];
+            int left = NSLeft[i];
+            int right = NSRight[i];
+            int width = right - left - 1;
+            maxval = max(maxval, height * width);
+        }
+        return maxval;
     }
 };
