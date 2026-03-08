@@ -19,12 +19,16 @@ public:
     }
 
     int pop() {
-        int val = st1.top();
+        int ans = st1.top();
         st1.pop();
-        return val;
+        return ans;
     }
 
-    int peek() { return st1.top(); }
+    int peek() {
+        int ans = st1.top();
+        st1.top();
+        return ans;
+    }
 
     bool empty() { return st1.empty(); }
 };
