@@ -1,36 +1,39 @@
 class Solution {
 public:
-
-   void DFS(int src,vector<int>&vis,vector<vector<int>>&adj){
-     vis[src]=1;
-     for(int& it:adj[src]){
-        if(vis[it]==0){
-            DFS(it,vis,adj);
-        }
-     }
-   }
-
-    int findCircleNum(vector<vector<int>>& matrix) {
-       int n=matrix.size();
-       vector<vector<int>>adj(n);
-
-       for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(matrix[i][j]==1){
-                adj[i].push_back(j);
+    void Dfs(vector<vector<int>>& Adj, vector<int>& visited, int src) {
+        visited[src] = true;
+        for (int i = 0; i < Adj[src].size(); i++) {
+            int v = Adj[src][i];
+            if (!visited[v]) {
+                Dfs(Adj, visited, v);
             }
         }
-       }
-       
-       int count=0;
-       vector<int>vis(n,0);
-       
-       for(int i=0;i<n;i++){
-        if(!vis[i]){
-            DFS(i,vis,adj);
-            count+=1;
+        return;
+    }
+    int findCircleNum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+
+        vector<vector<int>> Adj(n);
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (matrix[i][j] == 1) {
+                    Adj[i].push_back(j);
+                }
+            }
         }
-       }
-       return count;
+
+        int count = 0;
+        vector<int> visited(n, false);
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                Dfs(Adj, visited, i);
+                count++;
+            }
+        }
+
+        return count;
     }
 };
