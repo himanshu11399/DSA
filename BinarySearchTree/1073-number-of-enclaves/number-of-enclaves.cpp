@@ -1,46 +1,49 @@
 class Solution {
 public:
-    vector<vector<int>> dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-    void dfs(int i, int j, vector<vector<int>>& grid, vector<vector<int>>& vis,
-             int n, int m) {
-        vis[i][j] = 1;
-
-        for (auto it : dir) {
-            int nrow = i + it[0];
-            int ncol = j + it[1];
-            if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m &&
-                grid[nrow][ncol] == 1 && vis[nrow][ncol] == 0) {
-                dfs(nrow, ncol, grid, vis, n, m);
-            }
-        }
-    }
-
-    int numEnclaves(vector<vector<int>>& grid) {
-        int n = grid.size();
-        int m = grid[0].size();
+    int numEnclaves(vector<vector<int>>& mat) {
+        int n = mat.size();
+        int m = mat[0].size();
 
         vector<vector<int>> vis(n, vector<int>(m, 0));
+        vector<vector<int>> dir = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+        queue<pair<int,int>> q;
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (i == 0 || i == n - 1 || j == 0 || j == m - 1) {
-                    if (grid[i][j] == 1 && vis[i][j] == 0) {
-                        dfs(i, j, grid, vis, n, m);
+                if (i == 0 || j == 0 || i == n - 1 || j == m - 1) {
+                    if (mat[i][j] == 1) {
+                        q.push({i, j});
+                        vis[i][j] = 1;
                     }
                 }
             }
         }
 
-        int count = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (grid[i][j] == 1 && vis[i][j] == 0) {
-                    count++;
+        while (!q.empty()) {
+            auto [row, col] = q.front();
+            q.pop();
+
+            for (auto it : dir) {
+                int nrow = row + it[0];
+                int ncol = col + it[1];
+
+                if (nrow < n && nrow >= 0 && ncol < m && ncol >= 0 &&
+                    vis[nrow][ncol] == 0 && mat[nrow][ncol] == 1) {
+                    q.push({nrow, ncol});
+                    vis[nrow][ncol] = 1;
                 }
             }
         }
 
-        return count;
+        int land = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (vis[i][j] == 0 && mat[i][j] == 1) {
+                    land++;
+                    vis[i][j] = 1;
+                }
+            }
+        }
+        return land;
     }
 };
