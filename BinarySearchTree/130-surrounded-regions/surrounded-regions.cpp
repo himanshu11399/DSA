@@ -1,42 +1,48 @@
 class Solution {
 public:
-vector<vector<int>>dir={{1,0},{-1,0},{0,1},{0,-1}};
+    void solve(vector<vector<char>>& mat) {
+       int n=mat.size();
+       int m=mat[0].size();
 
-    void dfs(int row,int col,vector<vector<char>>&board,vector<vector<int>>&vis,int n,int m){
-       vis[row][col]=1;
+       vector<vector<int>>vis(n,vector<int>(m,0));
+       vector<vector<int>>dir={{0,1},{1,0},{-1,0},{0,-1}};
+       queue<pair<int,int>>q;
 
-       for(auto it:dir){
-        int nrow=row+it[0];
-        int ncol=col+it[1];
-        if(nrow>=0 && ncol>=0 && nrow<n && ncol<m && board[nrow][ncol]=='O' && vis[nrow][ncol]==0){
-            dfs(nrow,ncol,board,vis,n,m);
+
+       for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+           if(i==0 || i==n-1 || j==0 || j==m-1){
+            if(mat[i][j]=='O'){
+                q.push({i,j});
+                vis[i][j]=1;
+            }
+           }
         }
-       } 
-    }
+       }
 
-    void solve(vector<vector<char>>& board) {
-        int n=board.size();
-        int m=board[0].size();
-        vector<vector<int>>vis(n,vector<int>(m,0));
+       while(!q.empty()){
+        auto [row,col]=q.front();
+        q.pop();
 
-        //mark the edges
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                if(i==0 || i==n-1 || j==0 || j==m-1 ){
-                   if(board[i][j]=='O' && vis[i][j] == 0){
-                    dfs(i,j,board,vis,n,m);
-                   }
-                }
+        for(auto it:dir){
+            int nrow=row+it[0];
+            int ncol=col+it[1];
+
+            if(nrow<n && nrow>=0 && ncol<m && ncol>=0 
+             && vis[nrow][ncol]==0 && mat[nrow][ncol]=='O'){
+               vis[nrow][ncol]=1;
+               q.push({nrow,ncol});
+             }
+        }
+       }
+
+       for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(vis[i][j]==0 && mat[i][j]=='O'){
+                mat[i][j]='X';
+                vis[i][j]=1;
             }
         }
-
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                if(board[i][j]=='O' && vis[i][j]==0){
-                    board[i][j]='X';
-                }
-            }
-        }
-
+       }
     }
 };
