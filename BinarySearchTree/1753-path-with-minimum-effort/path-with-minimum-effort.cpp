@@ -1,41 +1,41 @@
 class Solution {
 public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
-        int n = heights.size();
-        int m = heights[0].size();
+    int minimumEffortPath(vector<vector<int>>& nums) {
+        int n = nums.size();
+        int m = nums[0].size();
 
-        if (n == 1 && m == 1)
-            return 0;
-
-        vector<vector<int>> dis(n, vector<int>(m, 1e9));
-        dis[0][0] = 0;
+        vector<vector<int>> diff(n, vector<int>(m, INT_MAX));
+        vector<vector<int>> dis = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
 
         priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>>
-            q;
-        q.push({0, 0, 0});
+            pq;
 
-        vector<vector<int>> dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        pq.push({0, 0, 0});
+        diff[0][0] = 0;
 
-        while (!q.empty()) {
-            auto it = q.top();
-            int effort = it[0];
+        while (!pq.empty()) {
+            auto it = pq.top();
+            pq.pop();
+
+            int wt = it[0];
             int row = it[1];
             int col = it[2];
-            q.pop();
 
-            for (auto it : dir) {
-                int nrow = row + it[0];
-                int ncol = col + it[1];
-                if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m) {
-                    int neweffort = max(
-                        effort, abs(heights[row][col] - heights[nrow][ncol]));
-                    if (neweffort < dis[nrow][ncol]) {
-                        dis[nrow][ncol] = neweffort;
-                        q.push({neweffort, nrow, ncol});
-                    }
+            for (auto it : dis) {
+                int u = row + it[0];
+                int v = col + it[1];
+
+                if(u>=0 && u<n && v>=0 && v<m){
+
+                int totalmax =
+                    max(wt, abs(nums[row][col] - nums[u][v]));
+                if (diff[u][v] > totalmax) {
+                    diff[u][v] = totalmax;
+                    pq.push({totalmax, u, v});
+                }
                 }
             }
         }
-        return dis[n - 1][m - 1];
+        return diff[n - 1][m - 1];
     }
 };
