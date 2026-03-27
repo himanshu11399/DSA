@@ -1,43 +1,44 @@
 class Solution {
 public:
-    int M = 1e9 + 7;
     int countPaths(int n, vector<vector<int>>& roads) {
+        long long mod = 1e9 + 7;
 
-        vector<vector<pair<int, long long>>> adj(n);
+        vector<vector<pair<long long, long long>>> adj(n);
         for (auto it : roads) {
             adj[it[0]].push_back({it[1], it[2]});
             adj[it[1]].push_back({it[0], it[2]});
         }
 
-        vector<long long> dis(n, LLONG_MAX);
-        vector<int> ways(n, 0);
-        priority_queue<pair<long long, int>, vector<pair<long long, int>>,
-                       greater<pair<long long, int>>>
+        priority_queue<pair<long long, long long>, vector<pair<long long, long long>>,
+                       greater<pair<long long, long long>>>
             pq;
+        vector<long long> dist(n, LLONG_MAX);
+        vector<long long> ways(n, 0);
 
         pq.push({0, 0});
-        dis[0] = 0;
+        dist[0] = 0;
         ways[0] = 1;
 
         while (!pq.empty()) {
-            auto i = pq.top();
-            long long cost = i.first;
-            int node = i.second;
+            auto [wt, node] = pq.top();
             pq.pop();
 
             for (auto it : adj[node]) {
-                int adjnode = it.first;
-                long long wt = it.second;
-                if (cost + wt < dis[adjnode]) {
-                    pq.push({cost + wt, adjnode});
-                    dis[adjnode] = cost + wt;
-                    ways[adjnode] = ways[node];
-                } else if (cost + wt == dis[adjnode]) {
-                    ways[adjnode] = (ways[adjnode] + ways[node]) % M;
+                int adjNode = it.first;
+                long long dis = wt+it.second;
+
+                if (dist[adjNode] > dis) {
+                    ways[adjNode]=ways[node];
+                    pq.push({dis, adjNode});
+                    dist[adjNode] = dis;
+                }else if(dist[adjNode]==dis){
+                    ways[adjNode]=(ways[adjNode]+ways[node])%mod;
                 }
             }
         }
 
-        return ways[n - 1] % M;
+        // int minCost = dist[n-1];
+       int maxWays = ways[n-1]%mod;
+        return maxWays;
     }
 };
