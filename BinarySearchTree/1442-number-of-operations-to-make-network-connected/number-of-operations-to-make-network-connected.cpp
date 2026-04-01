@@ -1,48 +1,47 @@
 class Solution {
 public:
-    vector<int> parent;
-    vector<int> rankvec;
-
-    int find(int n) {
-        if (parent[n] == n) {
-            return n;
+    int find(vector<int>& parent, int x) {
+        if (parent[x] == x) {
+            return x;
         }
-        return parent[n] = find(parent[n]);
+        return parent[x] = find(parent, parent[x]);
     }
 
-    bool unionset(int x, int y) {
+    bool UnionByRank(vector<int>& parent, vector<int>& rank, int x, int y) {
+        int px = find(parent, x);
+        int py = find(parent, y);
 
-        int xparent = find(x);
-        int yparent = find(y);
-
-        if (xparent == yparent) {
+        if (px == py) {
             return false;
         }
 
-        if (rankvec[xparent] > rankvec[yparent]) {
-            parent[yparent] = xparent;
-        } else if (rankvec[yparent] > rankvec[xparent]) {
-            parent[xparent] = yparent;
+        if (rank[px] > rank[py]) {
+            parent[py] = px;
+        } else if (rank[py] > rank[px]) {
+            parent[px] = py;
         } else {
-            parent[xparent] = yparent;
-            yparent++;
+            parent[px] = py;
+            rank[py]++;
         }
         return true;
     }
     int makeConnected(int n, vector<vector<int>>& connections) {
-        if (connections.size() < n - 1)
+        int reqEdges = n - 1;
+        int edges = connections.size();
+        if (reqEdges > edges) {
             return -1;
+        }
 
-        parent.resize(n);
-        rankvec.resize(n, 0);
+        vector<int> parent(n);
+        vector<int> rank(n, 0);
         for (int i = 0; i < n; i++) {
             parent[i] = i;
         }
 
-        int count = n-1;
-        for (auto it : connections) {
-            if (unionset(it[0], it[1])) {
-                count--;
+        int count=n-1;
+        for(auto it:connections){
+            if(UnionByRank(parent,rank,it[0],it[1])){
+              count--;
             }
         }
         return count;
