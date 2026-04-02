@@ -1,56 +1,57 @@
 class Solution {
 public:
     vector<int> parent;
-    vector<int> rankvec;
+    vector<int> rank;
 
-    int find(int n) {
-        if (parent[n] == n) {
-            return n;
+    int find(int x) {
+        if (parent[x] == x) {
+            return x;
         }
-        return parent[n] = find(parent[n]);
+        return parent[x] = find(parent[x]);
     }
 
-    void unionset(int a, int b) {
-        int aparent = find(a);
-        int bparent = find(b);
-
-        if (aparent == bparent) {
-            return;
+    bool unionByRank(int x, int y) {
+        int px = find(x);
+        int py = find(y);
+        if (px == py) {
+            return false;
         }
-        if (rankvec[aparent] > rankvec[bparent]) {
-            parent[bparent] = aparent;
-        } else if (rankvec[bparent] > rankvec[aparent]) {
-            parent[aparent] = bparent;
+        if (rank[px] > rank[py]) {
+            parent[py] = px;
+        } else if (rank[py] > rank[px]) {
+            parent[px] = py;
         } else {
-            parent[aparent] = bparent;
-            rankvec[bparent]++;
+            parent[px] = py;
+            rank[py]++;
         }
+        return true;
     }
-
     int removeStones(vector<vector<int>>& stones) {
-        int n=stones.size();
+        int n = stones.size();
         parent.resize(n);
-        rankvec.resize(n,0);
-
-        for(int i=0;i<n;i++){
-            parent[i]=i;
+        rank.resize(n, 0);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
         }
 
-        for(int i=0;i<n;i++){
-            for(int j=i+1;j<n;j++){
-                if(stones[i][0]==stones[j][0] || stones[i][1]==stones[j][1]){
-                    unionset(i,j);
+        int count = 0;
+
+        for (int i = n-1; i >= 1; i--) {
+            int node = i;
+            int x = stones[i][0];
+            int y = stones[i][1];
+
+            for (int j = i - 1; j >= 0; j--) {
+                int a = stones[j][0];
+                int b = stones[j][1];
+
+                if (x == a || y == b) {
+                    if (unionByRank(node, j)) {
+                        count++;
+                    }
                 }
             }
         }
-
-        int groups=0;
-        for(int i=0;i<n;i++){
-            if(parent[i]==i){
-                groups++;
-            }
-        }
-      return n-groups;
-
+        return count;
     }
 };
