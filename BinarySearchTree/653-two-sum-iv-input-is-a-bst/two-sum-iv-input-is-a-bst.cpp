@@ -14,9 +14,8 @@ class Solution {
 public:
     bool findTarget(TreeNode* root, int k) {
         set<int> st;
-        TreeNode* curr = root;
         queue<TreeNode*> q;
-        q.push(curr);
+        q.push(root);
         while (!q.empty()) {
             TreeNode* it = q.front();
             q.pop();
@@ -25,7 +24,7 @@ public:
             if (st.find(d) != st.end()) {
                 return true;
             }
-            st.insert(it->val);
+            st.insert(val);
             if (it->left) {
                 q.push(it->left);
             }
