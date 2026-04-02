@@ -2,30 +2,30 @@ class Solution {
 public:
     vector<int> parent;
     vector<int> rank;
-
-    int find(int n) {
-        if (parent[n] == n) {
-            return n;
+    int find(int x) {
+        if (parent[x] == x) {
+            return x;
         }
-        return parent[n] = find(parent[n]);
+        return parent[x] = find(parent[x]);
     }
-    void unionset(int x, int y) {
-        int xparent = find(x);
-        int yparent = find(y);
 
-        if (xparent == yparent)
-            return;
+    bool unionByRank(int x, int y) {
+        int px = find(x);
+        int py = find(y);
 
-        if (rank[xparent] > rank[yparent]) {
-            parent[yparent] = xparent;
-        } else if (rank[yparent] > rank[xparent]) {
-            parent[xparent] = yparent;
+        if (px == py)
+            return false;
+
+        if (rank[px] > rank[py]) {
+            parent[py] = px;
+        } else if (rank[py] > rank[px]) {
+            parent[px] = py;
         } else {
-            parent[xparent] = yparent;
-            rank[yparent]++;
+            parent[px] = py;
+            rank[py]++;
         }
+        return true;
     }
-
     vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
         int n = accounts.size();
         parent.resize(n);
@@ -34,41 +34,45 @@ public:
             parent[i] = i;
         }
 
-        // step-1 union of all the same accounts
+        vector<vector<string>> ans;
 
-        // email->index
-        unordered_map<string, int> mailmap;
+        unordered_map<string, int> mpp;
+
+        // store ans to remove duplicate emails
+        unordered_map<int, set<string>> bucket;
+
+        // Union Account
         for (int i = 0; i < n; i++) {
             for (int j = 1; j < accounts[i].size(); j++) {
-                string email = accounts[i][j];
-                // if they find the same email in the set so perform union
-                if (mailmap.find(email) != mailmap.end()) {
-                    unionset(i, mailmap[email]);
+                if (mpp.find(accounts[i][j]) != mpp.end()) {
+                    string email = accounts[i][j];
+                    if (mpp.find(email) != mpp.end()) {
+                        unionByRank(i, mpp[email]);
+                    }
                 } else {
-                    mailmap[email] = i;
+                    mpp[accounts[i][j]] = i;
                 }
             }
         }
 
-        // step-2 merge all the same emails in a mapp for the further sort
-        //  index->[emails]
-        unordered_map<int, set<string>> mergemap;
+        // insert emails into bucket
+        for (auto it : mpp) {
+            string email = it.first;
+            int idx = it.second;
 
-        for (auto it : mailmap) {
-            string mail = it.first;
-            int accountidx = it.second;
-            int parentidx = find(accountidx);
-            mergemap[parentidx].insert(mail);
+            int root = find(idx);
+            bucket[root].insert(email);
         }
 
-        //Final step to prepare the answer
-
-        vector<vector<string>>ans;
-        for(auto it:mergemap){
-            int index=it.first;
+        for (auto it : bucket) {
+            int root = it.first;
             vector<string>temp;
-            temp.push_back(accounts[index][0]);
-            temp.insert(temp.end(),it.second.begin(),it.second.end());
+
+            temp.push_back(accounts[root][0]);
+
+            for (auto email : it.second) {
+                temp.push_back(email);
+            }
             ans.push_back(temp);
         }
         return ans;
