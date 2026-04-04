@@ -1,39 +1,35 @@
 class Solution {
 public:
-    void Dfs(vector<vector<int>>& Adj, vector<int>& visited, int src) {
-        visited[src] = true;
-        for (int i = 0; i < Adj[src].size(); i++) {
-            int v = Adj[src][i];
-            if (!visited[v]) {
-                Dfs(Adj, visited, v);
+    void bfs(vector<vector<int>>& adj, vector<int>& vis, int& src) {
+        vis[src] = 1;
+
+        for (int i = 0; i < adj[src].size(); i++) {
+            int v = adj[src][i];
+            if (vis[v] == 0) {
+                bfs(adj, vis, v);
             }
         }
-        return;
     }
-    int findCircleNum(vector<vector<int>>& matrix) {
-        int n = matrix.size();
-        int m = matrix[0].size();
-
-        vector<vector<int>> Adj(n);
-
+    int findCircleNum(vector<vector<int>>& nums) {
+        int n = nums.size();
+        vector<vector<int>> adj(n);
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (matrix[i][j] == 1) {
-                    Adj[i].push_back(j);
+            for (int j = 0; j < n; j++) {
+                if (nums[i][j] == 1 && i != j) {
+                    adj[i].push_back(j);
+                    adj[j].push_back(i);
                 }
             }
         }
 
+        vector<int> vis(n, 0);
         int count = 0;
-        vector<int> visited(n, false);
-
         for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                Dfs(Adj, visited, i);
+            if (vis[i] == 0) {
+                bfs(adj, vis, i);
                 count++;
             }
         }
-
         return count;
     }
 };
