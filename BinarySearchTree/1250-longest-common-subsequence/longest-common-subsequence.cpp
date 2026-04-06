@@ -8,21 +8,24 @@ public:
         if (dp[i][j] != -1) {
             return dp[i][j];
         }
-        int ispos = 0;
-        int row = 0;
-        int col = 0;
+
+        // Match
+        int isMatch = 0;
+        int left = 0;
+        int right = 0;
         if (s1[i] == s2[j]) {
-            ispos = solve(s1, s2, i + 1, j + 1) + 1;
+            isMatch = solve(s1, s2, i + 1, j + 1) + 1;
         } else {
-            // Increse i
-            row = solve(s1, s2, i + 1, j);
 
-            // Increase J
-            col = solve(s1, s2, i, j + 1);
+            // increse i
+            left = solve(s1, s2, i + 1, j);
+
+            // Increase j
+            right = solve(s1, s2, i, j + 1);
         }
-        return dp[i][j] = max(ispos, max(row, col));
-    }
 
+        return dp[i][j] = max(isMatch, max(left, right));
+    }
     int longestCommonSubsequence(string text1, string text2) {
         int n = text1.size();
         int m = text2.size();
