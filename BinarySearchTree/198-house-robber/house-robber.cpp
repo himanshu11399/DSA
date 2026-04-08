@@ -1,22 +1,21 @@
 class Solution {
 public:
 vector<int>dp;
-int solve(int i,vector<int>&nums){
-    if(i>=nums.size()){
-        return 0;
+int solve(vector<int>&nums,int i){
+    if(i>=nums.size()) return 0;
+    if(dp[i]!=-1){
+        return dp[i];
     }
-    if(dp[i]!=-1) return dp[i];
 
-    //take
-    int left=nums[i]+solve(i+2,nums);
+    int take=solve(nums,i+2)+nums[i];
 
-    //not take
-    int right=solve(i+1,nums);
+    int notake=solve(nums,i+1);
 
-    return dp[i]= max(left,right);
+    return dp[i]=max(take,notake);
 }
     int rob(vector<int>& nums) {
-        dp.assign(nums.size()+1,-1);
-       return solve(0,nums); 
+        int n=nums.size();
+        dp.assign(n+1,-1);
+        return solve(nums,0);
     }
 };
