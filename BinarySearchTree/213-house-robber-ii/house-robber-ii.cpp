@@ -15,17 +15,15 @@ public:
 
         return dp[i] = max(take, notake);
     }
-
-    int robber(vector<int>&nums,int start,int end){
-        int n=nums.size();
-        vector<int>dp(n,-1);
-        return solve(nums,start,end,dp);
-    }
     int rob(vector<int>& nums) {
         int n = nums.size();
         if (n == 1) {
             return nums[0];
         }
-        return max(robber(nums,0,n-2),robber(nums,1,n-1));
+        vector<int>dp(n,-1);
+        int first=solve(nums,0,n-2,dp);
+        dp.assign(n,-1);
+        int second=solve(nums,1,n-1,dp);
+        return max(first,second);
     }
 };
