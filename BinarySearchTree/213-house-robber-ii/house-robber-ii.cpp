@@ -1,25 +1,31 @@
 class Solution {
 public:
-int find(int i,vector<int>&nums,vector<int>&dp,int n){
-   if(i>=n ) return 0;
-   if(dp[i]!=-1) return dp[i];
+    int solve(vector<int>& nums, int i, int n,vector<int>&dp) {
+        if (i >n) {
+            return 0;
+        }
+        
+        if (dp[i] != -1) {
+            return dp[i];
+        }
 
-   int inc=nums[i]+find(i+2,nums,dp,n);
-   int exc=find(i+1,nums,dp,n);
+        int take = solve(nums, i + 2, n,dp) + nums[i];
 
-   return dp[i]=max(inc,exc);
-}
+        int notake = solve(nums, i + 1, n,dp);
 
-int robrange(vector<int>&nums,int start,int end){
-    vector<int>dp(nums.size(),-1);
-    vector<int>sub(nums.begin()+start,nums.begin()+end+1);
-    return find(0,sub,dp,sub.size());
-}
-    int rob(vector<int>& nums) {
+        return dp[i] = max(take, notake);
+    }
+
+    int robber(vector<int>&nums,int start,int end){
         int n=nums.size();
-        if(n==1) return nums[0];
-        int ans1=robrange(nums,0,n-2);
-        int ans2=robrange(nums,1,n-1);
-        return max(ans1,ans2);
+        vector<int>dp(n,-1);
+        return solve(nums,start,end,dp);
+    }
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        if (n == 1) {
+            return nums[0];
+        }
+        return max(robber(nums,0,n-2),robber(nums,1,n-1));
     }
 };
