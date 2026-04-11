@@ -1,15 +1,25 @@
 class Solution {
 public:
-    int minimumTotal(vector<vector<int>>& triangle) {
-      int m=triangle.size();
-      
-      for(int i=m-2;i>=0;i--){
-        for(int j=0;j<triangle[i].size();j++){
-            int down=triangle[i+1][j];
-            int diagonal=triangle[i+1][j+1];
-           triangle[i][j]=triangle[i][j]+min(down,diagonal);
+    int minimumTotal(vector<vector<int>>& nums) {
+        int n=nums.size();
+        if(n==1){
+            return nums[0][0];
         }
-      }
- return triangle[0][0];
+        vector<vector<int>>dp(n+1,vector<int>(n+1,1e9));
+        dp[0][0]=0;
+
+
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=nums[i-1].size();j++){
+                int left=dp[i-1][j-1];
+                int right=dp[i-1][j];
+                dp[i][j]=min(left,right)+nums[i-1][j-1];
+            }
+        }
+        int minans=INT_MAX;
+        for(int i=0;i<=n;i++){
+          minans=min(minans,dp[n][i]);
+        }
+        return minans;
     }
 };
