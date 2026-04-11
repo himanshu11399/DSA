@@ -17,7 +17,7 @@ public:
             }
         }
         int minans=INT_MAX;
-        for(int i=0;i<=n;i++){
+        for(int i=1;i<=n;i++){
           minans=min(minans,dp[n][i]);
         }
         return minans;
