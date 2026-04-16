@@ -1,19 +1,32 @@
 class Solution {
 public:
 vector<vector<int>>dp;
-int solve(int i,vector<int>&nums,int amount){
-    if(amount==0) return 0;
-    if(i>=nums.size() || amount<0) return 1e9;
-    if(dp[i][amount]!=-1) return dp[i][amount];
-    //take same
-    int same=1+solve(i,nums,amount-nums[i]);
-    int diff=solve(i+1,nums,amount);
-    
-    return dp[i][amount]=min(same,diff);
+int solve(vector<int>&nums,int i,int amount){
+    if(amount==0){
+        return 0;
+    }
+    if(i>=nums.size() || amount<0){
+        return INT_MAX;
+    }
+    if(dp[i][amount]!=-1){
+        return dp[i][amount];
+    }
+
+    int same=solve(nums,i,amount-nums[i]);
+    if(same!=INT_MAX){
+        same+=1;
+    }
+    int notake=solve(nums,i+1,amount);
+
+    return dp[i][amount]=min(same,notake);
 }
-    int coinChange(vector<int>& coins, int amount) {
-        dp.assign(coins.size()+1,vector<int>(amount+1,-1));
-        int ans= solve(0,coins,amount);
-        return ans>=1e9?-1 :ans;
+    int coinChange(vector<int>& nums, int amount) {
+      int n=nums.size();
+      dp.assign(n+1,vector<int>(amount+1,-1));
+      int ans=solve(nums,0,amount);
+      if(ans==INT_MAX){
+        return -1;
+      } 
+      return ans; 
     }
 };
