@@ -1,32 +1,25 @@
 class Solution {
 public:
-    vector<vector<int>> dp;
-    int offset;
-
-    int solve(int i, vector<int>& nums, int target) {
-        if(target>offset) return 0;
-        if (i==nums.size()) {
-            return target==0 ? 1 : 0;
+    unordered_map<string,int>mpp;
+    int solve(vector<int> nums, int i, int currsum, int target) {
+        if (i == nums.size()) {
+            if (target == currsum) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        string key=to_string(i)+"_"+to_string(currsum);
+        if(mpp.count(key)){
+            return mpp[key];
         }
 
-        if (dp[i][target+offset] != -1)
-            return dp[i][target+offset];
+        int add = solve(nums, i + 1, currsum + nums[i], target);
+        int sub = solve(nums, i + 1, currsum - nums[i], target);
 
-        
-        int add = solve(i + 1, nums, target - nums[i]);
-        int subs = solve(i + 1, nums, target + nums[i]);
-
-        return dp[i][target + offset] = add + subs;
+        return mpp[key]=add + sub;
     }
-
     int findTargetSumWays(vector<int>& nums, int target) {
-        int n = nums.size();
-        int sum=accumulate(nums.begin(),nums.end(),0);
-         
-        if(sum<abs(target)) return 0;
-        offset=sum;
-        dp.assign(n + 1, vector<int>(2*sum+1, -1));
-
-        return solve(0, nums, target);
+        return solve(nums, 0, 0, target);
     }
 };
