@@ -2,7 +2,7 @@ class Solution {
 public:
 vector<vector<int>>dp;
 int solve(string& str,int i,int j){
-    if(i>=str.size() || j<0 || i>j){
+    if( j<0 || i>j){
         return 0;
     }
     if(i==j){
