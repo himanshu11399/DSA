@@ -5,9 +5,9 @@ public:
         if (i == s1.size() && j == s2.size()) {
             return 0;
         }
-        if (i > s1.size() && j < s2.size()) {
-            return INT_MAX;
-        }
+        // if (i > s1.size() && j < s2.size()) {
+        //     return INT_MAX;
+        // }
 
         if (dp[i][j] != -1) {
             return dp[i][j];
