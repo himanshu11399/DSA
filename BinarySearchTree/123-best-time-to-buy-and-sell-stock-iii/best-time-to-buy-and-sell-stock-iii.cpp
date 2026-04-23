@@ -1,27 +1,28 @@
 class Solution {
 public:
+    vector<vector<vector<int>>> dp;
+    int solve(vector<int>& prices, int i, int buy, int maxbuy) {
+        if (i >= prices.size() || maxbuy == 0) {
+            return 0;
+        }
+        if (dp[i][buy][maxbuy] != -1) {
+            return dp[i][buy][maxbuy];
+        }
+        int profit = 0;
+        if (buy == 1) {
+            int take = -prices[i] + solve(prices, i + 1, 0, maxbuy);
+            int notake = solve(prices, i + 1, 1, maxbuy);
+            profit = max(take, notake);
+        } else {
+            int take = +prices[i] + solve(prices, i + 1, 1, maxbuy - 1);
+            int notake = solve(prices, i + 1, 0, maxbuy);
+            profit = max(take, notake);
+        }
+        return dp[i][buy][maxbuy] = profit;
+    }
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<vector<int>>> dp(
-            n + 1, vector<vector<int>>(2, vector<int>(3, 0)));
-
-        for (int i = n - 1; i >= 0; i--) {
-            for (int buy = 0; buy <= 1; buy++) {
-                for (int limit = 1; limit <= 2; limit++) {
-                    int profit = 0;
-                    if (buy) {
-                        int buyit = -prices[i] + dp[i + 1][0][limit];
-                        int ignoreit = dp[i + 1][1][limit];
-                        profit = max(buyit, ignoreit);
-                    } else {
-                        int sellit = prices[i] + dp[i + 1][1][limit-1];
-                        int ignoreit = dp[i + 1][0][limit];
-                        profit = max(sellit, ignoreit);
-                    }
-                    dp[i][buy][limit] = profit;
-                }
-            }
-        }
-        return dp[0][1][2];
+        dp.assign(n + 1, vector<vector<int>>(2, vector<int>(3, -1)));
+        return solve(prices, 0, 1, 2);
     }
 };
