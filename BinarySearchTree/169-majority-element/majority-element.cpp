@@ -1,18 +1,14 @@
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
-        int candidate=nums[0];
-        int vote=1;
-        for(int i=1;i<nums.size();i++){
-            if(vote==0){
-                candidate=nums[i];
-                vote=1;
-            }else if(candidate==nums[i]){
-                vote++;
-            }else{
-                vote--;
+        unordered_map<int, int> mpp;
+        int limit = nums.size() / 2;
+        for (int i = 0; i < nums.size(); i++) {
+            mpp[nums[i]]++;
+            if (mpp[nums[i]] > limit) {
+                return nums[i];
             }
         }
-        return candidate;
+        return -1;
     }
 };
