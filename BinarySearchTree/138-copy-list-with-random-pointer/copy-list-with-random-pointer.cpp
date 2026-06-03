@@ -17,36 +17,37 @@ public:
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
-        Node* dummy = new Node(0);
-        Node* clone = dummy;
+        Node* dummy = new Node(-1);
+        Node* ans = dummy;
+
         Node* temp = head;
 
-        // Add the new duplicate node in the Linklist
-        while (temp != NULL) {
+        // Part-1 Add duplicate Nodes
+        while (temp) {
             Node* newnode = new Node(temp->val);
             newnode->next = temp->next;
             temp->next = newnode;
             temp = newnode->next;
         }
 
-        // Add the Random POinters
-        Node* temp1 = head;
-        while (temp1 != NULL) {
-            if (temp1->random) {
-                temp1->next->random = temp1->random->next;
-            } else {
-                temp1->next->random = NULL;
+        // Part-B Connect Random Pointers
+        temp = head;
+        while (temp) {
+            Node* clone = temp->next;
+            if(temp->random){
+            clone->random = temp->random->next;
             }
-            temp1 = temp1->next->next;
+            temp = temp->next->next;
         }
 
-        // Delink the duplicate node and generate a replica
-        Node* temp2 = head;
-        while (temp2 != NULL) {
-            clone->next = temp2->next;
-            temp2->next = temp2->next->next;
-            temp2 = temp2->next;
-            clone = clone->next;
+        // Part-C Delink the Clone List
+        temp = head;
+        while (temp) {
+            Node* nextNode = temp->next;
+            ans->next = nextNode;
+            temp->next = nextNode->next;
+            ans = ans->next;
+            temp = temp->next;
         }
         return dummy->next;
     }
