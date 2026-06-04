@@ -1,18 +1,27 @@
 class Solution {
 public:
-    int jump(vector<int>& nums) {
-        int n=nums.size();
-        int l=0,r=0;
-        int jumps=0;
-        while(r<n-1){
-            int longest=0;
-            for(int i=l;i<=r;i++){
-                longest=max(longest,nums[i]+i);
-            }
-            l=r+1;
-            r=longest;
-            jumps=jumps+1;
+    vector<int> dp;
+    int solve(vector<int>&nums, int idx) {
+        if (idx == nums.size() - 1) {
+            return 0;
         }
-        return jumps;
+        if (dp[idx] != -1) {
+            return dp[idx];
+        }
+        int minJumps = INT_MAX;
+        for (int i = 1; i <= nums[idx]; i++) {
+            if (idx+i < nums.size()) {
+                int next=solve(nums,idx+i);
+                if(next!=INT_MAX){
+                minJumps = min(minJumps, 1+next);
+                }
+            }
+        }
+        return dp[idx] = minJumps;
+    }
+    int jump(vector<int>& nums) {
+        int n = nums.size();
+        dp.assign(n + 1,-1);
+        return solve(nums, 0);
     }
 };
