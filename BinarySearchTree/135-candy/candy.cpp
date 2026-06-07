@@ -1,26 +1,29 @@
 class Solution {
 public:
-    int candy(vector<int>& ratings) {
-        int n = ratings.size();
-        vector<int> candy(n, 1);
+    int candy(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> candies(n, 1);
 
-        // For left
+        // Use left Rule
         for (int i = 1; i < n; i++) {
-            if (ratings[i] > ratings[i - 1]) {
-                candy[i] = max(candy[i], candy[i - 1] + 1);
-            }
-        }
-        // For Right
-        for (int i = n - 2; i >= 0; i--) {
-            if (ratings[i] > ratings[i + 1]) {
-                candy[i] = max(candy[i], candy[i + 1] + 1);
+            if (nums[i] > nums[i - 1]) {
+                candies[i] = candies[i - 1] + 1;
             }
         }
 
-        int maxcandy = 0;
-        for (int i = 0; i < n; i++) {
-            maxcandy += candy[i];
+        // Use Right Rule
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] > nums[i + 1]) {
+                if (candies[i] <= candies[i + 1]) {
+                    candies[i] = candies[i + 1] + 1;
+                }
+            }
         }
-        return maxcandy;
+
+        int total = 0;
+        for (int i = 0; i < n; i++) {
+            total += candies[i];
+        }
+        return total;
     }
 };
