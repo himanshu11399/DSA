@@ -20,6 +20,7 @@ public:
                 st.insert(box);
             }
         }
+        st.clear();
         return true;
     }
 };
