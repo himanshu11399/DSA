@@ -4,23 +4,24 @@ public:
         stack<char> st;
 
         for (int i = 0; i < s.size(); i++) {
-
-            // If starting braces so add in the stack
-            if (s[i] == '(' || s[i] == '[' || s[i] == '{') {
-                st.push(s[i]);
+            char sym = s[i];
+            if (sym == '(' || sym == '{' || sym == '[') {
+                st.push(sym);
             } else {
-                if (st.empty())
+                if (st.empty()) {
                     return false;
-                char ch = st.top();
-                if ((s[i] == '}' && ch == '{') || (s[i] == ']' && ch == '[') ||
-                    s[i] == ')' && ch == '(') {
+                } else if ((st.top() == '(' && sym == ')') ||
+                           (st.top() == '[' && sym == ']') ||
+                           (st.top() == '{' && sym == '}')) {
                     st.pop();
-                    continue;
                 } else {
                     return false;
                 }
             }
         }
-        return st.empty();
+        if (!st.empty()) {
+            return false;
+        }
+        return true;
     }
 };
