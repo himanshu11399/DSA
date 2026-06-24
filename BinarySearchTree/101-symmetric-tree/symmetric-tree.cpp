@@ -12,20 +12,17 @@
  */
 class Solution {
 public:
-    bool isSymmetricUntil(TreeNode* t1, TreeNode* t2) {
+    bool isSolve(TreeNode* t1, TreeNode* t2) {
         if (!t1 && !t2)
             return true;
-        if ((!t1 && t2) || (t1 && !t2))
+        if (!t1 || !t2 || t1->val != t2->val) {
             return false;
-        if (t1->val != t2->val)
-            return false;
-        return isSymmetricUntil(t1->left, t2->right) &&
-               isSymmetricUntil(t1->right, t2->left);
+        }
+        return isSolve(t1->left, t2->right) && isSolve(t1->right, t2->left);
     }
-
     bool isSymmetric(TreeNode* root) {
         if (!root)
             return true;
-        return isSymmetricUntil(root->left, root->right);
+        return isSolve(root->left, root->right);
     }
 };
