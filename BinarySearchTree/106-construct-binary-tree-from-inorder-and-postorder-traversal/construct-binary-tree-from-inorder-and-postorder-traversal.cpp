@@ -12,27 +12,26 @@
  */
 class Solution {
 public:
-    int search(vector<int>& inorder, int left, int right, int t) {
-        for (int i = left; i <= right; i++) {
-            if (inorder[i] == t)
-                return i;
-        }
-        return -1;
-    }
-
-    TreeNode* build(vector<int>& inorder, vector<int>& postorder, int& PostIdx,
-                    int left, int right) {
-        if (left > right)
+    unordered_map<int, int> mpp;
+    int idx;
+    TreeNode* solve(vector<int>& inorder, vector<int>& postorder, int idxi,
+                    int idxj) {
+        if (idxi > idxj) {
             return NULL;
-        TreeNode* root = new TreeNode(postorder[PostIdx]);
-        int idx = search(inorder, left, right, postorder[PostIdx]);
-        PostIdx--;
-        root->right = build(inorder, postorder, PostIdx, idx + 1, right);
-        root->left = build(inorder, postorder, PostIdx, left, idx - 1);
+        } else {
+            idx--;
+        }
+        TreeNode* root = new TreeNode(postorder[idx]);
+        int newIdx = mpp[postorder[idx]];
+        root->right = solve(inorder, postorder, newIdx + 1, idxj);
+        root->left = solve(inorder, postorder, idxi, newIdx - 1);
         return root;
     }
     TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
-        int PostIdx = postorder.size() - 1;
-        return build(inorder, postorder, PostIdx, 0, inorder.size() - 1);
+        idx = postorder.size();
+        for (int i = 0; i < inorder.size(); i++) {
+            mpp[inorder[i]] = i;
+        }
+        return solve(inorder, postorder, 0, inorder.size() - 1);
     }
 };
