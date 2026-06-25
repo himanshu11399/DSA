@@ -10,38 +10,37 @@
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        map<TreeNode*, TreeNode*> parent;
+        // it  will store like {child,parent}
+        unordered_map<TreeNode*, TreeNode*> mpp;
         queue<TreeNode*> que;
         que.push(root);
-        parent[root] = NULL;
+        mpp[root] = NULL;
         while (!que.empty()) {
             TreeNode* curr = que.front();
             que.pop();
             if (curr->left) {
                 que.push(curr->left);
-                parent[curr->left] = curr;
+                mpp[curr->left] = curr;
             }
             if (curr->right) {
+                mpp[curr->right] = curr;
                 que.push(curr->right);
-                parent[curr->right] = curr;
             }
         }
 
-        set<TreeNode*> st;
+        unordered_set<TreeNode*> ansector;
         while (p) {
-            st.insert(p);
-            p = parent[p];
+            ansector.insert(p);
+            p = mpp[p];
         }
 
-        while(q){
-            if(st.count(q)){
-                return q;
+        // Find ansector
+        while (q) {
+            if (ansector.count(q)) {
+                break;
             }
-            q=parent[q];
+            q = mpp[q];
         }
-    
-
-    return NULL;
-}
-}
-;
+        return q;
+    }
+};
