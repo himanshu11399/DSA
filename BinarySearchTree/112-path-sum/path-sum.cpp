@@ -18,9 +18,6 @@ public:
         if (sum == target && !root->left && !root->right) {
             return true;
         }
-        // if (sum > target) {
-        //     return false;
-        // }
         bool left = solve(root->left, target, sum);
         bool right = solve(root->right, target, sum);
         return left || right;
