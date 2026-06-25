@@ -12,23 +12,32 @@
  */
 class BSTIterator {
 public:
-    queue<TreeNode*> q;
-    void inorder(TreeNode* root) {
-        if (!root)
-            return;
-        inorder(root->left);
-        q.push(root);
-        inorder(root->right);
+    vector<int> nums;
+    int i = 0;
+
+    void inorder(TreeNode*root){
+         if(!root) return;
+         inorder(root->left);
+         nums.push_back(root->val);
+         inorder(root->right);
     }
-    BSTIterator(TreeNode* root) { inorder(root); }
+    BSTIterator(TreeNode* root) {
+       inorder(root);
+    }
 
     int next() {
-        TreeNode* curr = q.front();
-        q.pop();
-        return curr->val;
+        if(i>=nums.size())return -1;
+        int val = nums[i];
+        i++;
+        return val;
     }
 
-    bool hasNext() { return !q.empty(); }
+    bool hasNext() {
+        if (i < nums.size()) {
+            return true;
+        }
+        return false;
+    }
 };
 
 /**
