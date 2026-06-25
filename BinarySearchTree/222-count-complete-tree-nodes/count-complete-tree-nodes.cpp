@@ -6,27 +6,31 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
 public:
     int countNodes(TreeNode* root) {
-      if(!root) return 0;
-      int total=0;
-      queue<TreeNode*>q;
-      q.push(root);
-      while(!q.empty()){
-        TreeNode*curr=q.front();
-        q.pop();
-        total+=1;
-        if(curr->left){
-            q.push(curr->left);
+        if (!root)
+            return 0;
+        int count = 0;
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            TreeNode* curr = q.front();
+            q.pop();
+            count+=1;
+            if (curr->left) {
+                q.push(curr->left);
+            }
+            if (curr->right) {
+                q.push(curr->right);
+            }
         }
-        if(curr->right){
-            q.push(curr->right);
-        }
-      } 
-      return total; 
+        return count;
     }
 };
