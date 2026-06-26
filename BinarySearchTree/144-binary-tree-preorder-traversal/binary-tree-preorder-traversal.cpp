@@ -6,34 +6,31 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
- * right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode* root) {
-        vector<int> ans;
-        if (!root)
-            return ans;
-        while (root) {
-            // If root->left not exist
-            if (!root->left) {
-                ans.push_back(root->val);
-                root = root->right;
-            } else {
-                TreeNode* curr = root->left;
-                while (curr->right && curr->right != root) {
-                    curr = curr->right;
+        vector<int>ans;
+        if(!root) return ans;
+        TreeNode*curr=root;
+        while(curr){
+            if(!curr->left){
+                ans.push_back(curr->val);
+                curr=curr->right;
+            }else{
+                TreeNode*temp=curr->left;
+                while(temp->right && temp->right!=curr){
+                    temp=temp->right;
                 }
-
-                if (curr->right == root) {
-                    curr->right = NULL;
-                    root = root->right;
-                } else {
-                    ans.push_back(root->val);
-                    curr->right = root;
-                    root = root->left;
+                if(temp->right==NULL){
+                    temp->right=curr;
+                    ans.push_back(curr->val);
+                    curr=curr->left;
+                }else{
+                    curr->left=NULL;
+                    curr=curr->right;
                 }
             }
         }
