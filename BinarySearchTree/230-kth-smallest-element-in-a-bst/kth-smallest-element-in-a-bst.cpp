@@ -12,19 +12,23 @@
  */
 class Solution {
 public:
-    void inorder(TreeNode* root, vector<int>& arr, int limit) {
-        if (!root)
+    int ans = -1;
+    int limit;
+    void inorder(TreeNode* root) {
+        if (!root) {
             return;
-        if (limit == 0)
-            return;
-        inorder(root->left, arr, limit);
-        arr.push_back(root->val);
-        limit--;
-        inorder(root->right, arr, limit);
+        }
+        inorder(root->left);
+        if (limit == 0 && ans==-1) {
+            ans = root->val;
+        } else {
+            limit--;
+        }
+        inorder(root->right);
     }
     int kthSmallest(TreeNode* root, int k) {
-        vector<int> arr;
-        inorder(root, arr, k);
-        return arr[k - 1];
+        limit=k-1;
+        inorder(root);
+        return ans;
     }
 };
