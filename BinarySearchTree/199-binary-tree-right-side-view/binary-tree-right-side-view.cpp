@@ -21,20 +21,18 @@ public:
         q.push(root);
         while (!q.empty()) {
             int n = q.size();
-            int val = -1;
             for (int i = 0; i < n; i++) {
-                TreeNode* temp = q.front();
+                TreeNode* curr = q.front();
                 q.pop();
-                val = temp->val;
-                if (temp->left) {
-                    q.push(temp->left);
+                if (i == n - 1) {
+                    ans.push_back(curr->val);
                 }
-                if (temp->right) {
-                    q.push(temp->right);
+                if (curr->left) {
+                    q.push(curr->left);
                 }
-            }
-            if (val != -1) {
-                ans.push_back(val);
+                if (curr->right) {
+                    q.push(curr->right);
+                }
             }
         }
         return ans;
