@@ -16,27 +16,25 @@ public:
         vector<int> ans;
         if (!root)
             return ans;
-        // Morris Traversal
-        while (root) {
-            // If left is not Exist
-            if (!root->left) {
-                ans.push_back(root->val);
-                root = root->right;
+        TreeNode* curr = root;
+        while (curr) {
+            // If left not exist
+            if (!curr->left) {
+                ans.push_back(curr->val);
+                curr = curr->right;
             } else {
-                // If left is exist;
-                TreeNode* curr = root->left;
-                while (curr->right && curr->right != root) {
-                    curr = curr->right;
+                // Left is Exist
+                TreeNode* temp = curr->left;
+                while (temp->right && temp->right != curr) {
+                    temp = temp->right;
                 }
 
-                // If traversed First
-                if (curr->right == root) {
-                    ans.push_back(root->val);
-                    curr->right = NULL;
-                    root = root->right;
-                } else {
-                    curr->right = root;
-                    root = root->left;
+                // Not Traverse
+                if (temp->right == NULL) {
+                    temp->right = curr;
+                    curr = curr->left;
+                } else { // Traverse
+                    curr->left = NULL;
                 }
             }
         }
