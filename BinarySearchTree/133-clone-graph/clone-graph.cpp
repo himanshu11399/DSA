@@ -22,8 +22,6 @@ public:
 class Solution {
 public:
     void dfs(Node* node, Node* clone, unordered_map<Node*, Node*>& mpp) {
-        if ((node && !clone) || (!node && clone)) 
-            return;
         for (Node* it : node->neighbors) {
             if (mpp.find(it) == mpp.end()) {
                 Node* newclone = new Node(it->val);
