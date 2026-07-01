@@ -5,16 +5,15 @@ public:
         int c = matrix[0].size();
         int low = 0;
         int high = (r * c) - 1;
-
         while (low <= high) {
             int mid = (low + high) / 2;
-            int val=matrix[mid / c][mid % c];
+            int val = matrix[mid / c][mid % c];
             if (val == target) {
                 return true;
-            } else if (target > val) {
-                low = mid + 1;
-            } else {
+            } else if (val > target) {
                 high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
         return false;
