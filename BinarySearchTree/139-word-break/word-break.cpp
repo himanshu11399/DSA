@@ -1,34 +1,31 @@
 class Solution {
 public:
     unordered_set<string> st;
-    int n;
-    int t[301];
-    bool solve(int idx, string& s) {
-        if (idx >= n)
+    vector<int> dp;
+    bool solve(string& s, int idx) {
+        if (idx >= s.size()) {
             return true;
-
-        if (t[idx] != -1) {
-            return t[idx];
         }
-
-        for (int i = 1; i <= n; i++) {
-            string temp = s.substr(idx, i);
-            if (st.find(temp) != st.end() && solve(idx + i, s))
-                return t[idx]= true;
+        if (dp[idx] != -1) {
+            return dp[idx];
         }
-        return t[idx]= false;
+        bool ans = false;
+        for (int i = idx; i < s.size(); i++) {
+            string temp = s.substr(idx, i - idx + 1);
+            if (st.count(temp)) {
+                ans = solve(s, i + 1);
+                if (ans == true) {
+                    return dp[idx] = ans;
+                }
+            }
+        }
+        return dp[idx] = false;
     }
     bool wordBreak(string s, vector<string>& wordDict) {
-        n = s.length();
-
-        memset(t,-1,sizeof(t));
-
-        for (string& it : wordDict) {
-            st.insert(it);
+        dp.assign(s.size(), -1);
+        for (int i = 0; i < wordDict.size(); i++) {
+            st.insert(wordDict[i]);
         }
-
-        if (st.find(s) != st.end())
-            return true;
-        return solve(0, s);
+        return solve(s, 0);
     }
 };
