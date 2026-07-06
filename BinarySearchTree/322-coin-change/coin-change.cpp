@@ -1,31 +1,26 @@
 class Solution {
 public:
-    int coinChange(vector<int>& nums, int amount) {
-        int n = nums.size();
-        vector<vector<int>> dp(n + 1, vector<int>(amount + 1, INT_MAX));
-        for (int i = 0; i <= n; i++) {
-            dp[i][0] = 0;
+    vector<vector<int>> dp;
+    int solve(vector<int>& coins, int amount, int idx) {
+        if (amount == 0) {
+            return 0;
         }
-
-        // start the loop
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= amount; j++) {
-                int notake = dp[i-1][j];
-                int same=INT_MAX;
-                if(j>=nums[i-1]){
-                    same=dp[i][j-nums[i-1]];
-                    if(same!=INT_MAX){
-                        same+=1;
-                    }
-                }
-                dp[i][j]=min(same,notake);
-            }
+        if (idx >= coins.size() || amount < 0) {
+            return INT_MAX;
         }
-
-        int ans=dp[n][amount];
-        if(ans==INT_MAX){
-            return -1;
+        if (dp[idx][amount] != -1) {
+            return dp[idx][amount];
         }
-        return ans;
+        int take = solve(coins, amount - coins[idx], idx);
+        if (take != INT_MAX) {
+            take += 1;
+        }
+        int notake = solve(coins, amount, idx + 1);
+        return dp[idx][amount] = min(take, notake);
+    }
+    int coinChange(vector<int>& coins, int amount) {
+        dp.assign(coins.size(), vector<int>(amount+1, -1));
+        int ans= solve(coins, amount, 0);
+        return ans==INT_MAX?-1:ans;
     }
 };
