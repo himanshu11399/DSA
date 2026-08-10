@@ -9,10 +9,9 @@ public:
                 left++;
             } else if (!isalnum(s[right])) {
                 right--;
+            } else if (tolower(s[left]) != tolower(s[right])) {
+                return false;
             } else {
-                if (tolower(s[left]) != tolower(s[right])) {
-                    return false;
-                }
                 left++;
                 right--;
             }
