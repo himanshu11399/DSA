@@ -1,45 +1,47 @@
 class Solution {
 public:
-vector<int>NSL(vector<int>nums,int n){
-    stack<int>st;
-    vector<int>ans(n,-1);
-    for(int i=0;i<n;i++){
-     while(!st.empty() && nums[i]<=nums[st.top()]){
-        st.pop();
-     }
-     if(!st.empty()){
-        ans[i]=st.top();
-     }
-     st.push(i);
-    }return ans;
-}
-vector<int>NSR(vector<int>nums,int n){
-    stack<int>st;
-    vector<int>ans(n,n);
-    for(int i=n-1;i>=0;i--){
-     while(!st.empty() && nums[i]<nums[st.top()]){
-        st.pop();
-     }
-     if(!st.empty()){
-        ans[i]=st.top();
-     }
-     st.push(i);
-    }return ans;
-}
+    vector<int> NLL(vector<int>& nums) {
+        int n = nums.size();
+        stack<int> st;
+        vector<int> ans(n);
+        for (int i = 0; i < n; i++) {
+            while (!st.empty() && nums[st.top()] >= nums[i]) {
+                st.pop();
+            }
+            ans[i] = st.empty() ? -1 : st.top();
+            st.push(i);
+        }
+        return ans;
+    }
+    vector<int> NLR(vector<int>& nums) {
+        int n = nums.size();
+        stack<int> st;
+        vector<int> ans(n);
+        for (int i = n-1; i >=0; i--) {
+            while (!st.empty() && nums[st.top()] > nums[i]) {
+                st.pop();
+            }
+            ans[i] = st.empty() ? n : st.top();
+            st.push(i);
+        }
+        return ans;
+    }
+
     int sumSubarrayMins(vector<int>& nums) {
-      long long ans=0;
-      int n=nums.size();
-      int m=1e9+7;
-      vector<int>nsl=NSL(nums,n);
-      vector<int>nsr=NSR(nums,n);
-      
-      for(int i=0;i<n;i++){
-        long long left=i-nsl[i];
-        long long right=nsr[i]-i;
-        long long ways=left*right;
-        long long sum=ways*nums[i];
-        ans=(ans+sum)%m;
-      }
-      return ans;
+        int n=nums.size();
+        int MOD=1e9+7;
+
+        vector<int>left=NLL(nums);
+        vector<int>right=NLR(nums);
+
+        int ans=0;
+
+        for(int i=0;i<nums.size();i++){
+            long long leftcount=i-left[i];
+            long long rightcount=right[i]-i;
+            long long con=(leftcount*rightcount % MOD)*nums[i] % MOD;
+            ans=(ans+con)%MOD;
+        }
+        return ans;
     }
 };
