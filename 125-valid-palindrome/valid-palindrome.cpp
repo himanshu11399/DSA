@@ -1,8 +1,8 @@
 class Solution {
 public:
     bool isPalindrome(string s) {
-        int left = 0;
-        int right = s.size() - 1;
+        int n = s.size();
+        int left = 0, right = n - 1;
 
         while (left <= right) {
             if (!isalnum(s[left])) {
