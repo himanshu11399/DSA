@@ -6,7 +6,7 @@ public:
         vector<int> ans;
 
         while (i < v1.size() && j < v2.size()) {
-            if (v1[i] <= v2[j]) {
+            if (v1[i] < v2[j]) {
                 ans.push_back(v1[i]);
                 i++;
             } else {
