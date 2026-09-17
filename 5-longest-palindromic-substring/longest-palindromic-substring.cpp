@@ -1,35 +1,26 @@
 class Solution {
 public:
-    vector<vector<int>> dp;
-    bool isValid(string& s, int i, int j) {
+    bool ischeck(string& s, int i, int j) {
         if (i >= j) {
             return true;
         }
-        if (dp[i][j] != -1) {
-            return dp[i][j];
-        }
-        if (s[i] != s[j]) {
+        if (s[i] != s[j])
             return false;
-        }
-        return dp[i][j] = isValid(s, i + 1, j - 1);
+        return ischeck(s, i + 1, j - 1);
     }
     string longestPalindrome(string s) {
         int n = s.size();
-        int len = 0;
-        int start=0;
-        dp.assign(n + 1, vector<int>(n + 1, -1));
-        for (int i = 0; i < n; i++) {
-            for (int j = i; j < n; j++) {
+        string ans = "";
+        int cnt = 0;
 
-                if (isValid(s, i, j)) {
-                    if (len < j - i + 1) {
-                        len = j - i + 1;
-                        start=i;
-                    }
+        for (int i = 0; i < n; i++) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (ischeck(s, i, j) && cnt < j - i + 1) {
+                    ans = s.substr(i, j - i + 1);
+                    cnt = j - i + 1;
                 }
             }
         }
-
-        return s.substr(start,len);
+        return ans;
     }
 };
