@@ -6,19 +6,22 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
 public:
-bool isverify(TreeNode*t1,TreeNode*t2){
-    if(!t1 && !t2) return true;
-    if(!t1 || !t2) return false;
-    if(t1->val!=t2->val) return false;
-
-    return isverify(t1->left,t2->right) && isverify(t1->right,t2->left);
-}
+    bool isSolve(TreeNode* p, TreeNode* q) {
+        if (p == NULL && q == NULL)
+            return true;
+        if (!p || !q)
+            return false;
+        if (p->val != q->val)
+            return false;
+        return isSolve(p->left, q->right) && isSolve(p->right, q->left);
+    }
     bool isSymmetric(TreeNode* root) {
-       return isverify(root->left,root->right);
+        return isSolve(root->left, root->right);
     }
 };
