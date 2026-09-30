@@ -12,30 +12,26 @@
  */
 class Solution {
 public:
-    int search(vector<int> arr, int st, int end, int val) {
-        for (int i = st; i <= end; i++) {
-            if (arr[i] == val) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    TreeNode* helper(vector<int>& in, vector<int>& pos, int left, int right,
-                     int& posIdx) {
-        if (left > right)
+    unordered_map<int, int> mpp;
+    TreeNode* solve(vector<int>& inorder, vector<int>& postorder, int& idx,
+                    int start, int end) {
+        if (start > end || idx<0) {
             return NULL;
-
-        TreeNode* root = new TreeNode(pos[posIdx]);
-        int inIdx = search(in, left, right, pos[posIdx]);
-        posIdx--;
-
-        root->right = helper(in, pos, inIdx+1, right, posIdx);
-        root->left = helper(in, pos, left, inIdx-1, posIdx);
-
-        return root;
+        }
+        int in_idx = mpp[postorder[idx]];
+        TreeNode* newNode = new TreeNode(inorder[in_idx]);
+        idx--;
+        newNode->right = solve(inorder, postorder, idx, in_idx + 1, end);
+        newNode->left = solve(inorder, postorder, idx, start, in_idx - 1);
+        
+        return newNode;
     }
-    TreeNode* buildTree(vector<int>& in, vector<int>& pos) {
-        int idx = pos.size() - 1;
-        return helper(in, pos, 0, in.size() - 1, idx);
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if(inorder.size()!=postorder.size()) return NULL;
+        for (int i = 0; i < inorder.size(); i++) {
+            mpp[inorder[i]] = i;
+        }
+        int idx = inorder.size() - 1;
+        return solve(inorder, postorder, idx, 0, inorder.size() - 1);
     }
 };
