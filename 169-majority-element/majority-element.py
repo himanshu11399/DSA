@@ -1,9 +1,13 @@
-class Solution:
-    def majorityElement(self, nums: list[int]) -> int:
+class Solution(object):
+    def majorityElement(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
         mpp={}
-        for x in nums:
-            mpp[x]=mpp.get(x,0)+1
-            if mpp[x]>len(nums)/2:
-                return x
+        for i in nums:
+            mpp[i]=mpp.get(i,0)+1
+            if mpp[i]>len(nums)/2:
+                return i
         return -1        
         
